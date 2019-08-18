@@ -1,0 +1,8 @@
+example_1:
+  Simple docker container for MNIST training
+  using Tensorflow, with persistent data volume.
+
+example_2:
+  Simple docker container for MNIST training,
+  with persistent data volume and Tensorboard logging.
+

@@ -1,0 +1,31 @@
+# Test pod to mount a PV bound to a PVC into a container
+# Before starting this pod, apply the PVC with kubectl apply -f pvc.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rohit-choudhary-pvc-tb-access-pod-extra-100
+spec:
+  containers:
+    - name: rohit-choudhary-pvc-tb-access-container-extra
+
+      # we use a small ubuntu base to access the PVC
+      image: ubuntu:16.04
+      # make sure that we have some time until the container quits by itself
+      command: ['sleep', '1h']
+
+      # list of mount paths within the container which will be
+      # bound to persistent volumes.
+      volumeMounts:
+      - mountPath: "/saver-100/"
+        # name of the volume for this path (from the below list)
+        name: pvc-tensorboard-extra
+
+  volumes:
+    # User-defined name of the persistent volume within this configuration.
+    # This can be different from the name of the PVC.
+    - name: pvc-tensorboard-extra
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-tensordata-extra-100
+
+

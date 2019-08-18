@@ -1,0 +1,115 @@
+# Test pod to mount a PV bound to a PVC into a container
+# Before starting this pod, apply the PVC with kubectl apply -f pvc.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rohit-choudhary-pvc-tb-access-pod-all1
+spec:
+  containers:
+    - name: rohit-choudhary-pvc-tb-access-container-extra
+
+      # we use a small ubuntu base to access the PVC
+      image: ubuntu:16.04
+      # make sure that we have some time until the container quits by itself
+      command: ['sleep', '1h']
+
+      # list of mount paths within the container which will be
+      # bound to persistent volumes.
+      volumeMounts:
+      - mountPath: "/saver-extra/"
+        # name of the volume for this path (from the below list)
+        name: pvc-tensorboard-extra
+      - mountPath: "/saver1/"
+        # name of the volume for this path (from the below list)
+        name: pvc-tensorboard
+      - mountPath: "/saver-2/"
+        # name of the volume for this path (from the below list)
+        name: pvc-mnist
+      - mountPath: "/saver-100-train/"
+        # name of the volume for this path (from the below list)
+        name: pvc-tensorboard-extra-100
+      - mountPath: "/saver-500/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-500
+      - mountPath: "/saver-100-test/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-100
+      - mountPath: "/saver-500-2/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-500-2
+      - mountPath: "/saver-500-3/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-500-3
+      - mountPath: "/saver-500-4/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-500-4
+      - mountPath: "/saver-500-train1/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-500-train1
+      - mountPath: "/saver-500-train2/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-500-train2
+      - mountPath: "/saver-1000/"
+        # name of the volume for this path (from the below list)
+        name: pvc-ssd-1000
+
+  volumes:
+    # User-defined name of the persistent volume within this configuration.
+    # This can be different from the name of the PVC.
+    - name: pvc-tensorboard-extra
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-tensordata-extra
+    - name: pvc-tensorboard
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-tensordata
+    - name: pvc-mnist
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-data
+    - name: pvc-tensorboard-extra-100
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-tensordata-extra-100
+    - name: pvc-ssd-500
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-500
+    - name: pvc-ssd-100
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-pvc-100
+    - name: pvc-ssd-500-2
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-500-2
+    - name: pvc-ssd-500-3
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-500-3
+    - name: pvc-ssd-500-4
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-500-4
+    - name: pvc-ssd-500-train1
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-500-train1
+    - name: pvc-ssd-500-train2
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-500-train2
+    - name: pvc-ssd-1000
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: rohit-choudhary-lfvs-1000
+
+
+
+        
+
+
+
+
+

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # the name of the PVC, we refer to this in the container configuration
+  # again, preprend your username to make the name unique
+  name: rohit-choudhary-lfvs-tensordata-extra-100
+
+spec:
+  resources:
+    requests:
+      # storage resource request. This PVC can only be bound to volumes which
+      # have at least 8 GiB of storage available.
+      storage: 101Gi
+
+  # the requested storage class, see tutorial.
+  storageClassName: local-tensorboard
+  
+  # leave these unchanged, they must match the PV type, otherwise binding will fail
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+

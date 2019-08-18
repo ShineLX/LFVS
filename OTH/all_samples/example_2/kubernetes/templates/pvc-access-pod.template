@@ -1,0 +1,38 @@
+# Test pod to mount a PV bound to a PVC into a container
+# Before starting this pod, apply the PVC with kubectl apply -f pvc.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ${KUBERNETES_USER_PREFIX}-pvc-tb-access-pod
+spec:
+  containers:
+    - name: ${KUBERNETES_USER_PREFIX}-pvc-tb-access-container
+
+      # we use a small ubuntu base to access the PVC
+      image: ubuntu:18.04
+      # make sure that we have some time until the container quits by itself
+      command: ['sleep', '6h']
+
+      # list of mount paths within the container which will be
+      # bound to persistent volumes.
+      volumeMounts:
+      - mountPath: "/mnt/pvc-mnist"
+        # name of the volume for this path (from the below list)
+        name: pvc-mnist
+      - mountPath: "/mnt/pvc-tensorboard"
+        # name of the volume for this path (from the below list)
+        name: pvc-tensorboard
+
+  volumes:
+    # User-defined name of the persistent volume within this configuration.
+    # This can be different from the name of the PVC.
+    - name: pvc-mnist
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: ${KUBERNETES_USER_PREFIX}-tf-mnist-pvc
+    - name: pvc-tensorboard
+      persistentVolumeClaim:
+        # name of the PVC this volume binds to
+        claimName: ${KUBERNETES_USER_PREFIX}-tf-mnist-tb-pvc
+
+

@@ -1,0 +1,60 @@
+#
+# This defines the version of the docker-compose.yml
+# file format we are using.
+#
+version: '2.3'
+
+#
+# In this section, all the services we are going to
+# start are defined. Each service corresponds to one
+# container.
+#
+services:
+
+    # Our application container is the only one we start.
+    application:
+
+        # This tells docker-compose that we intend to
+        # build the application container from scratch, it
+        # is not just a pre-existing image. The build configuration
+        # (kind of a makefile) resides in the subdirectory
+        # "application" in the file "Dockerfile".
+        build: 
+            context: ./application
+            dockerfile: Dockerfile
+
+        # This gives the container which has been built a "tag".
+        # A tag is a unique name which you can use to refer to this container.
+        # It should be of the form "<registry>/<username>/<application>:<version>
+        # If <version> is not specified, it will get the default "latest".
+        #
+        # The registry should be the one of the CCU, same with your
+        # username. You can also use a temporary image name here and
+        # later use the "docker tag" commmand to rename it to the final name
+        # you want to push to the registry.
+        #
+        image: ccu.uni-konstanz.de:5000/rohit.choudhary/tf_mnist:0.1
+
+        # The container needs the nvidia container runtime.
+        # The following is equivalent to specifying "docker run --runtime=nvidia".
+        # It is not necessary if nvidia is already configured as the
+        # default runtime (as on the Kubernetes cluster).
+        runtime: nvidia
+
+        # Environment variables set when running the image,
+        # which can for example used to configure the nVidia base
+        # container or your application. You can use these to
+        # configure your own code as well.
+        #
+        environment:
+          - NVIDIA_VISIBLE_DEVICES=all
+          - PYTHONUNBUFFERED=1
+
+        # This container should only be started once, if it fails,
+        # we have to fix errors anyway, if it exits successfully,
+        # we are happy.
+        restart: "no"
+
+        # The entry point of the container, i.e. the script or executable
+        # which is started after it has been created.
+        entrypoint: "/application/run.sh"

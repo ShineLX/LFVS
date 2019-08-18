@@ -1,0 +1,132 @@
+apt-get update
+apt-get install -y libsm6 libxext6 libxrender-dev
+pip install opencv-python
+
+ssh rc@134.34.231.218
+
+
+
+
+scp -r /Users/rohit/Documents/LFVS/LFVSk8s/application/src/LFVSK8s.py  rc@134.34.231.218:/home/rc/Documents/LFVS
+scp -r /Users/rohit/Documents/LFVS/LFVSgpu.py  rc@134.34.231.218:/home/rc/Documents/LFVS
+
+
+scp -r rc@134.34.231.218:/home/rc/Documents/LFVS/LFVSK8s.py  /Users/rohit/Documents/LFVS/LFVSk8s/application/src/ 
+
+scp -r rc@134.34.231.98:/home/rc/LFVS/LFVSk8s/application/src/LFVSK8s.py /Users/rohit/Documents/LFVS/LFVSk8s/application/src/  
+
+scp -r /home/rc/LFVS/LFVSk8s/application/src/LFVSK8s.py rc@134.34.231.218:/home/rc/Documents/LFVS/
+
+scp -r /Users/rohit/Documents/LFVS/LFVSgpu.py rc@134.34.231.218:/home/rc/Documents/LFVS/
+scp -r /Users/rohit/Documents/LFVS/generate_lf_dataset.py rc@134.34.231.218:/home/rc/Documents/LFVS/
+
+scp -r /Users/rohit/Documents/LFVS/LFVS.py  rc@134.34.231.98:/home/rc/LFVS_cuda/application/src/LFVS.py
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_1e-05/loss.npy  rc@134.34.231.98:/home/rc/data/
+
+
+cd /home/rc/LFVS/LFVSk8s/application/src
+nano LFVSK8s.py
+
+nano generate_lf_dataset.py
+
+cd /home/rc/LFVS/LFVSk8s
+docker-compose up --build 
+
+docker push ccu.uni-konstanz.de:5000/rohit.choudhary/lfvs-without-cpu13:latest
+
+kubectl delete pods rohit-choudhary-lfvs-without-cpu-jpth9
+
+kubectl apply -f pvc-access-pod.yaml
+kubectl cp rohit-choudhary-pvc-tb-access-pod1:/saver/lr.npy
+kubectl cp rohit-choudhary-pvc-tb-access-pod-extra:/saver/lr.npy /Users/rohit/Documents/LFVS/OTH/lr.npy
+kubectl cp /Users/rohit/Downloads/Random/benchmark/training rohit-choudhary-pvc-tb-access-pod1:/tmp/data/
+kubectl cp exc-cb/rohit-choudhary-pvc-tb-access-pod1:/saver/lr.npy /Users/rohit/Documents/LFVS/OTH
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-extra:/saver/loss.npy /Users/rohit/Documents/LFVS/OTH/data_decay_130_patch_64_batch_100_channel_3_strides_16/loss.npy
+
+kubectl apply -f lfvs-script.yaml
+kubectl patch pvc rohit-choudhary-lfvs-tensordatan -p '{"metadata":{"finalizers":null}}'
+
+/Users/rohit/Documents/LFVS/LFVSk8s/kubernetes
+
+du -hs /saver/checkpoint_saver
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod1:/saver/cuda_checkpoint_saver_decay_steps_200_global_22400/lr.npy  /Users/rohit/Documents/LFVS/OTH/cuda_checkpoint_saver_decay_steps_200_global_22400/lr.npy
+
+
+
+
+data_decay_100_start_lr_0_05_patch_64_batch_100_channel_3_strides_8_train_and_test_loss
+kubectl cp rohit-choudhary-pvc-tb-access-pod-extra:/saver/checkpoint_saver/loss_train.npy /Users/rohit/Documents/LFVS/OTH/data_decay_100_start_lr_0_05_patch_64_batch_100_channel_3_strides_8_train_and_test_loss/loss_train.npy
+ 
+ 
+scp -r  rc@134.34.231.218:/home/rc/Documents/LFVS/tmp/data/
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-extra:/saver/checkpoint_saver/lr.npy /Users/rohit/Documents/LFVS/OTH/learning_rate_0_1_patch_64_batch_50_channel_3_strides_8_train_and_test_loss_epoch_15/lr.npy
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod1:/saver/checkpoint_saver/lr.npy /Users/rohit/Documents/LFVS/OTH/learning_rate_0_001_patch_64_batch_50_channel_3_strides_8_train_and_test_loss_epoch_15/lr.npy
+
+ver/checkpoint_saver/GPU/model_8/lr_0.001/checkpoint
+
+###########
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver1/checkpoint_saver/model_8_2/lr_0.0001/tensorboard_test /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8_1files/lr_0.0001/tensorboard_test
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver1/checkpoint_saver/model_8_2/lr_0.0001/tensorboard_train /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8_1files/lr_0.0001/tensorboard_train
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver1/checkpoint_saver/model_8_2/lr_0.0001/model_information.txt /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8_1files/lr_0.0001/model_information.txt
+
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_0.01/tensorboard_test /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_0.01/tensorboard_test
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_0.01/tensorboard_train /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_0.01/tensorboard_train
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_0.001/tensorboard_test /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_0.001/tensorboard_test
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_0.001/tensorboard_train /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_0.001/tensorboard_train
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_0.0001/tensorboard_test /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_0.0001/tensorboard_test
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_0.0001/tensorboard_train /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_0.0001/tensorboard_train
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_1e-05/tensorboard_test /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_1e-05/tensorboard_test
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all1:/saver-100-train/checkpoint_saver/model_8/lr_1e-05/tensorboard_train /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary/model_8/lr_1e-05/tensorboard_train
+
+---------------------------------------------------------------------------------------------------------------------------
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all:/saver-extra/checkpoint_saver/model_8/lr_0.0001/tensorboard_train /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary_shuffled_data/model_8/lr_0.0001/tensorboard_train
+
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-all:/saver-extra/checkpoint_saver/model_8/lr_0.0001/tensorboard_test /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU_with_summary_shuffled_data/model_8/lr_0.0001/tensorboard_test
+
+---------------------------------------------------------------------------------------------------------------------------
+
+python -m tensorboard.main --logdir /Users/rohit/Documents/LFVS/saver/checkpoint_saver/GPU/model_8/tensorboard_train/events.out.tfevents.1564400116.rohit-choudhary-lfvs-cuda-1906-22-nnnnz -host localhost --port 8088
+
+kubectl cp rohit-choudhary-pvc-tb-access-pod-extra:/saver/checkpoint_saver/our_model rohit-choudhary-pvc-tb-access-pod1:/saver/checkpoint_saver
+
+
+
+lf_all_data_slice_128 = lf_train_data[:,0:2*train_config.patch_size,0:2*train_config.patch_size,:]
+for i in range(7):
+    for j in range(7):
+        if not (i==0 and j==0):
+            print (i,j)
+            patch = lf_train_data[:,i*train_config.patch_size:(i+2)*train_config.patch_size,j*train_config.patch_size:(j+2)*train_config.patch_size,:]
+            lf_all_data_slice_128 = np.concatenate((lf_all_data_slice_128,patch))
+
+
+for i in range(50):
+	cv2.imshow("orig_image",lf_train_data[i,:,:,:])
+	cv2.imshow("img", lf_all_data_slice_128[i,:,:,:])
+	cv2.waitKey(-1)
+

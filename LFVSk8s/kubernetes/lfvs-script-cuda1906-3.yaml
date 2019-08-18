@@ -1,0 +1,160 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # name of the job
+  name: rohit-choudhary-lfvs-cuda-1906-model6-lstm-8-128-1file-effi-v2
+
+spec:
+  template:
+    spec:
+      # List of containers belonging to the job starts here
+      containers:
+      # container name used for pod creation
+      - name: lfvs-container
+        # container image from the registry
+        #image: ccu.uni-konstanz.de:5000/rohit.choudhary/lfvs-single_image:latest
+        image: ccu.uni-konstanz.de:5000/rohit.choudhary/lfvs-using-cuda-19.06:latest
+        #command: ['sleep', '1h']
+
+        # make sure the new image is always pulled fresh from the repository
+        imagePullPolicy: Always
+
+        # container resources requested from the node
+        resources:
+          # requests are minimum resourcerequirements
+          requests:
+            # this gives us a minimum 2 GiB of main memory to work with.
+            memory: "2Gi"
+
+          # limits are maximum resource allocations
+          limits:
+            # this gives an absolute limit of 3 GiB of main memory.
+            # exceeding it will mean the container exits immediately with an error.
+            #memory: "10Gi"
+
+            # this requests a number of GPUs. GPUs will be allocated to the container
+            # exclusively. No fractional GPUs can be requested.
+            # When executing nvidia-smi in the container, it should show exactly this
+            # number of GPUs.
+            #
+            # PLEASE DO NOT SET THE NUMBER TO ZERO, EVER, AND ALWAYS INCLUDE THIS LINE.
+            # ALWAYS PUT IT IN THE SECTION "limits", NOT "requests".
+            #
+            # It is a known limitation of nVidias runtime that if zero GPUs are requested,
+            # then actually *all* GPUs are exposed in the container.
+            # We are looking for a fix to this.
+            #
+            nvidia.com/gpu: "1"
+
+        # Environment variables set when running the image,
+        # which can for example used to configure your application.
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+
+        # the command which is executed after container creation
+        command: ["/application/run.sh"]
+        #command: ["/bin/bash"]
+
+        # list of mount paths within the container which will be
+        # bound to persistent volumes.
+        volumeMounts:
+        - mountPath: "/saver-extra/"
+          # name of the volume for this path (from the below list)
+          name: pvc-tensorboard-extra
+        - mountPath: "/saver1/"
+          # name of the volume for this path (from the below list)
+          name: pvc-tensorboard
+        - mountPath: "/saver-2/"
+          # name of the volume for this path (from the below list)
+          name: pvc-mnist
+        - mountPath: "/saver-100-train/"
+          # name of the volume for this path (from the below list)
+          name: pvc-tensorboard-extra-100
+        - mountPath: "/saver-500/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-500
+        - mountPath: "/saver-100-test/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-100
+        - mountPath: "/saver-500-2/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-500-2
+        - mountPath: "/saver-500-3/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-500-3
+        - mountPath: "/saver-500-4/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-500-4
+        - mountPath: "/saver-500-train1/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-500-train1
+        - mountPath: "/saver-500-train2/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-500-train2
+        - mountPath: "/saver-1000/"
+          # name of the volume for this path (from the below list)
+          name: pvc-ssd-1000
+
+      # login credentials to the docker registry.
+      # for convenience, a readonly credential is provided as a secret in each namespace.
+      imagePullSecrets:
+      - name: registry-ro-login
+
+      # containers will never restart
+      restartPolicy: Never
+
+      volumes:
+      - name: pvc-tensorboard-extra
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-tensordata-extra
+      - name: pvc-tensorboard
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-tensordata
+      - name: pvc-mnist
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-data
+      - name: pvc-tensorboard-extra-100
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-tensordata-extra-100
+      - name: pvc-ssd-500
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-500
+      - name: pvc-ssd-100
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-pvc-100
+      - name: pvc-ssd-500-2
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-500-2
+      - name: pvc-ssd-500-3
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-500-3
+      - name: pvc-ssd-500-4
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-500-4 
+      - name: pvc-ssd-500-train1
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-500-train1
+      - name: pvc-ssd-500-train2
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-500-train2
+      - name: pvc-ssd-1000
+        persistentVolumeClaim:
+          # name of the PVC this volume binds to
+          claimName: rohit-choudhary-lfvs-1000
+
+  # number of retries after failure.
+  # since we typically have to fix something in this case, set to zero by default.
+  backoffLimit: 0
+
